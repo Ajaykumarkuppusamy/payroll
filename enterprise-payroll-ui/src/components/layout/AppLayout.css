@@ -1,0 +1,290 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AppLayout Styles — Dark Enterprise Shell
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Root Layout ─────────────────────────────────────────────────────────── */
+
+.app-layout {
+  min-height: 100vh;
+  background: #060b18 !important;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+
+.app-sider {
+  background: #0a1628 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+  overflow: hidden;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Hide AntD's default trigger */
+.app-sider .ant-layout-sider-trigger {
+  display: none !important;
+}
+
+/* ── Brand Block ─────────────────────────────────────────────────────────── */
+
+.sider-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 16px;
+  overflow: hidden;
+}
+
+.sider-brand--collapsed {
+  justify-content: center;
+  padding: 20px 0 16px;
+}
+
+.brand-logo {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.brand-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+
+.brand-tagline {
+  font-size: 10px;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+
+.sider-divider {
+  margin: 0 16px 12px !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── Navigation Menu ─────────────────────────────────────────────────────── */
+
+.app-menu {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 8px;
+}
+
+.app-menu .ant-menu-item {
+  border-radius: 10px !important;
+  margin-bottom: 4px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  color: #cbd5e1 !important;
+  transition: all 0.2s ease !important;
+}
+
+.app-menu .ant-menu-item:hover {
+  background: rgba(99, 102, 241, 0.15) !important;
+  color: #c7d2fe !important;
+}
+
+.app-menu .ant-menu-item-selected {
+  background: rgba(79, 70, 229, 0.25) !important;
+  color: #a5b4fc !important;
+}
+
+.app-menu .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+.app-menu .ant-menu-item .ant-menu-item-icon {
+  font-size: 16px !important;
+}
+
+/* ── Collapse Button ─────────────────────────────────────────────────────── */
+
+.sider-collapse-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.sider-collapse-btn:hover {
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.sider-collapse-btn .anticon {
+  font-size: 15px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.app-header {
+  background: rgba(10, 22, 40, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 0 24px !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 99 !important;
+  /* Offset for fixed sidebar — updated via CSS var in App */
+  margin-left: var(--sider-width, 240px);
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-page-title {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+  letter-spacing: -0.2px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Company Switcher ────────────────────────────────────────────────────── */
+
+.company-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(71, 85, 105, 0.4);
+}
+
+.switcher-icon {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.company-select {
+  min-width: 130px;
+}
+
+.company-select .ant-select-selector {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  padding: 0 !important;
+}
+
+/* ── User Info ───────────────────────────────────────────────────────────── */
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-email {
+  font-size: 13px !important;
+  color: #cbd5e1 !important;
+  max-width: 160px;
+}
+
+.user-role-tag {
+  font-size: 10px !important;
+  line-height: 16px !important;
+  padding: 0 5px !important;
+  border-radius: 4px !important;
+  margin: 0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-divider {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  height: 20px !important;
+}
+
+.logout-btn {
+  color: #ef4444 !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #f87171 !important;
+}
+
+/* ── Content Area ────────────────────────────────────────────────────────── */
+
+.app-content {
+  padding: 28px 28px;
+  min-height: calc(100vh - 60px);
+  background: #060b18 !important;
+  /* offset for the fixed sidebar */
+  margin-left: 240px;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When sidebar is collapsed (72px wide), shift content */
+.ant-layout-sider-collapsed ~ .ant-layout .app-content,
+.ant-layout-sider-collapsed ~ .ant-layout .app-header {
+  margin-left: 72px;
+}

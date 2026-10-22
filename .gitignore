@@ -1,0 +1,26 @@
+# Maven
+enterprise-payroll-api/target/
+enterprise-payroll-api/.mvn/wrapper/maven-wrapper.jar
+
+# Node / Vite
+enterprise-payroll-ui/node_modules/
+enterprise-payroll-ui/dist/
+enterprise-payroll-ui/.vite/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+*.env
+application-local.yml
+application-local.properties
+
+# Logs
+*.log
+logs/

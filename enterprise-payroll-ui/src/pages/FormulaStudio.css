@@ -1,0 +1,264 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   FormulaStudio Page Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Page Wrapper ────────────────────────────────────────────────────────── */
+
+.studio-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Page Header ─────────────────────────────────────────────────────────── */
+
+.studio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 24px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.studio-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.studio-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(79, 70, 229, 0.2));
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #a78bfa;
+}
+
+.studio-title {
+  margin: 0 !important;
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+.studio-subtitle {
+  color: #94a3b8 !important;
+  font-size: 13px;
+}
+
+.stat-text {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────────────────── */
+
+.mock-badge {
+  font-size: 11px !important;
+  border-radius: 6px !important;
+}
+
+.studio-search {
+  width: 280px !important;
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+  border-radius: 10px !important;
+}
+
+.studio-search .ant-input {
+  background: transparent !important;
+  color: #f8fafc !important;
+}
+
+.studio-search .ant-input::placeholder { color: #94a3b8 !important; }
+
+.search-icon { color: #94a3b8 !important; }
+
+.refresh-btn {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(71, 85, 105, 0.5) !important;
+  color: #cbd5e1 !important;
+  border-radius: 10px !important;
+}
+
+.refresh-btn:hover {
+  border-color: rgba(124, 58, 237, 0.5) !important;
+  color: #a78bfa !important;
+}
+
+.add-component-btn {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35) !important;
+  font-weight: 500 !important;
+}
+
+.add-component-btn:hover {
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+/* ── Alert ───────────────────────────────────────────────────────────────── */
+
+.studio-error { border-radius: 10px !important; }
+
+/* ── Table Wrapper ───────────────────────────────────────────────────────── */
+
+.studio-table-wrapper {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+/* ── AntD Dark Table Overrides ───────────────────────────────────────────── */
+
+.studio-table .ant-table {
+  background: transparent !important;
+  color: #f8fafc !important;
+}
+
+.studio-table .ant-table-thead > tr > th {
+  background: rgba(10, 22, 40, 0.9) !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 14px 16px !important;
+}
+
+.studio-table .ant-table-tbody > tr > td {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: #f1f5f9 !important;
+  font-size: 13px !important;
+  padding: 14px 16px !important;
+  transition: background 0.15s ease;
+}
+
+.studio-table .ant-table-tbody > tr:hover > td {
+  background: rgba(124, 58, 237, 0.08) !important;
+}
+
+.studio-table .ant-table-pagination {
+  padding: 16px !important;
+  margin: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── Cell Styles ─────────────────────────────────────────────────────────── */
+
+.code-tag {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  font-size: 11px !important;
+  border-radius: 5px !important;
+  white-space: nowrap !important;
+}
+
+.component-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.component-name {
+  font-weight: 500;
+  color: #f8fafc;
+  font-size: 14px;
+}
+
+.component-var-hint {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.spel-var {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.type-tag {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  border-radius: 6px !important;
+  padding: 2px 8px !important;
+}
+
+.calc-tag {
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+.flat-value {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+  color: #34d399 !important;
+  font-weight: 600 !important;
+}
+
+.pct-value {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+  color: #a78bfa !important;
+  font-weight: 600 !important;
+}
+
+.formula-cell {
+  display: block;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.flag-tag {
+  font-size: 10px !important;
+  border-radius: 5px !important;
+  padding: 0 6px !important;
+  line-height: 18px !important;
+}
+
+/* ── Test Button ─────────────────────────────────────────────────────────── */
+
+.test-formula-btn {
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-color: rgba(124, 58, 237, 0.4) !important;
+  color: #a78bfa !important;
+  background: rgba(124, 58, 237, 0.08) !important;
+  transition: all 0.2s ease !important;
+}
+
+.test-formula-btn:not(:disabled):hover {
+  border-color: rgba(124, 58, 237, 0.8) !important;
+  background: rgba(124, 58, 237, 0.15) !important;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.3) !important;
+}

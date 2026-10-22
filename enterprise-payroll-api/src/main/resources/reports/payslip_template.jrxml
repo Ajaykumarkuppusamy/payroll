@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="payslip_template" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+    
+    <parameter name="tenantName" class="java.lang.String"/>
+    <parameter name="companyName" class="java.lang.String"/>
+    <parameter name="employeeName" class="java.lang.String"/>
+    <parameter name="employeeCode" class="java.lang.String"/>
+    <parameter name="department" class="java.lang.String"/>
+    <parameter name="payPeriod" class="java.lang.String"/>
+    <parameter name="grossPay" class="java.lang.String"/>
+    <parameter name="totalDeductions" class="java.lang.String"/>
+    <parameter name="netPay" class="java.lang.String"/>
+    
+    <field name="componentName" class="java.lang.String"/>
+    <field name="amount" class="java.math.BigDecimal"/>
+    <field name="type" class="java.lang.String"/> <!-- "EARNING" or "DEDUCTION" -->
+
+    <title>
+        <band height="100" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="555" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="30" width="555" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Payslip for the period: " + $P{payPeriod}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="60" width="100" height="20"/>
+                <textElement verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[Employee Code:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="60" width="150" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$P{employeeCode}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="300" y="60" width="100" height="20"/>
+                <textElement verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[Employee Name:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="400" y="60" width="155" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$P{employeeName}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="90" width="555" height="1"/>
+            </line>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="30" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="200" height="30"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Component]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="200" y="0" width="150" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Type]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="350" y="0" width="205" height="30"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="200" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{componentName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="150" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="350" y="0" width="205" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="120" splitType="Stretch">
+            <line>
+                <reportElement x="0" y="10" width="555" height="1"/>
+            </line>
+            <staticText>
+                <reportElement x="300" y="20" width="100" height="20"/>
+                <textElement verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[Gross Earnings:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="400" y="20" width="155" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$P{grossPay}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="300" y="50" width="100" height="20"/>
+                <textElement verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[Total Deductions:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="400" y="50" width="155" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$P{totalDeductions}]]></textFieldExpression>
+            </textField>
+            
+            <line>
+                <reportElement x="300" y="75" width="255" height="1"/>
+            </line>
+            
+            <staticText>
+                <reportElement x="300" y="80" width="100" height="30"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[NET PAY:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="400" y="80" width="155" height="30"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{netPay}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

@@ -1,0 +1,296 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   FormulaTesterDrawer Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Drawer Shell ────────────────────────────────────────────────────────── */
+
+.formula-drawer .ant-drawer-body {
+  background: #0a1628 !important;
+  padding: 0 !important;
+  overflow-y: auto;
+}
+
+.formula-drawer .ant-drawer-content {
+  background: #0a1628 !important;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.drawer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 24px 20px;
+  gap: 16px;
+}
+
+.drawer-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-type-badge {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.badge-earning {
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+
+.badge-deduction {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.drawer-title {
+  margin: 0 0 8px !important;
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+.drawer-code-tag {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  border-radius: 5px !important;
+}
+
+.drawer-var-tag {
+  font-size: 11px !important;
+  border-radius: 5px !important;
+  color: #94a3b8 !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+}
+
+.drawer-var-tag code {
+  font-family: 'JetBrains Mono', monospace;
+  color: #a5b4fc;
+}
+
+.drawer-close-btn {
+  color: #475569 !important;
+  font-size: 16px !important;
+  flex-shrink: 0;
+  padding: 4px 8px !important;
+}
+
+.drawer-close-btn:hover {
+  color: #94a3b8 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+
+.drawer-divider {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  margin: 0 !important;
+}
+
+/* ── Section Label ───────────────────────────────────────────────────────── */
+
+.section-label {
+  display: block;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  color: #475569 !important;
+  margin-bottom: 16px;
+}
+
+.section-hint-icon {
+  color: #334155 !important;
+  font-size: 12px;
+  margin-left: 6px;
+  cursor: help;
+}
+
+/* ── Formula Preview ─────────────────────────────────────────────────────── */
+
+.formula-preview-section {
+  padding: 24px;
+}
+
+.formula-block {
+  background: rgba(6, 11, 24, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.formula-label {
+  display: block;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+
+.formula-expression {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  color: #a5b4fc;
+  background: transparent;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.formula-hint {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px !important;
+  color: #475569 !important;
+}
+
+.formula-meta-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.meta-tag {
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+/* ── Tester Section ──────────────────────────────────────────────────────── */
+
+.tester-section {
+  padding: 24px;
+}
+
+.tester-form {
+  margin-top: 4px;
+}
+
+.tester-form-item .ant-form-item-label > label {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.salary-input {
+  width: 100% !important;
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+  border-radius: 10px !important;
+  color: #e2e8f0 !important;
+}
+
+.salary-input .ant-input-number-input {
+  color: #e2e8f0 !important;
+}
+
+.evaluate-btn {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  height: 44px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35) !important;
+  transition: all 0.2s ease !important;
+  margin-top: 8px;
+}
+
+.evaluate-btn:hover {
+  box-shadow: 0 6px 24px rgba(79, 70, 229, 0.55) !important;
+  transform: translateY(-1px);
+}
+
+/* ── Result ──────────────────────────────────────────────────────────────── */
+
+.result-section {
+  padding: 0 24px 24px;
+}
+
+.result-alert {
+  border-radius: 10px !important;
+}
+
+.result-card {
+  background: rgba(6, 11, 24, 0.7);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: 14px;
+  padding: 20px;
+  animation: result-in 0.3s ease;
+}
+
+@keyframes result-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.result-check-icon {
+  color: #34d399;
+  font-size: 16px;
+}
+
+.result-label {
+  font-size: 12px !important;
+  color: #64748b !important;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.result-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #34d399;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.result-deduction-note {
+  display: block;
+  font-size: 12px !important;
+  color: #f87171 !important;
+  margin-bottom: 12px;
+}
+
+.result-deduction-note strong {
+  color: #fca5a5;
+}
+
+.result-breakdown {
+  margin: 0 !important;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.result-breakdown pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #64748b;
+  white-space: pre-wrap;
+  margin: 0;
+}

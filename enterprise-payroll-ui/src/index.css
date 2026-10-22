@@ -1,0 +1,96 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Global Baseline Styles — Enterprise Payroll Platform
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Reset & Box Model ───────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Root & Body ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* Brand palette */
+  --color-primary:      #4f46e5;
+  --color-primary-dark: #3730a3;
+  --color-accent:       #7c3aed;
+  --color-sky:          #0ea5e9;
+
+  /* Dark surface layers */
+  --surface-900: #060b18;
+  --surface-800: #0d1526;
+  --surface-700: #0f1f3d;
+  --surface-600: #1e293b;
+  --surface-500: #334155;
+
+  /* Text — Enhanced Contrast */
+  --text-primary:   #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted:     #94a3b8;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: var(--surface-900);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track  { background: var(--surface-800); }
+::-webkit-scrollbar-thumb  { background: var(--surface-500); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+/* ── Placeholder / Coming Soon ───────────────────────────────────────────── */
+
+.coming-soon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.3px;
+}
+
+/* ── Ant Design Dark Theme Overrides ─────────────────────────────────────── */
+
+/* Force AntD to inherit the Inter font */
+.ant-btn,
+.ant-form,
+.ant-input,
+.ant-card,
+.ant-table,
+.ant-select,
+.ant-drawer {
+  font-family: var(--font-sans) !important;
+}

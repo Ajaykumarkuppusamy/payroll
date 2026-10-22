@@ -1,0 +1,75 @@
+.batch-drawer .ant-drawer-body {
+  background: #0a1628 !important;
+}
+
+.batch-drawer .ant-drawer-content {
+  background: #0a1628 !important;
+}
+
+.drawer-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-title-group h4 {
+  color: #e2e8f0 !important;
+}
+
+.record-emp-name {
+  font-weight: 500;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.record-emp-code {
+  font-size: 11px !important;
+  color: #475569 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.monetary-value {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.monetary-value.deduction {
+  color: #f87171 !important;
+}
+
+.monetary-value.net-pay {
+  color: #34d399 !important;
+  font-weight: 700 !important;
+}
+
+/* Dark Table Theme matches FormulaStudio */
+.batch-drawer .ant-table {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+}
+
+.batch-drawer .ant-table-thead > tr > th {
+  background: rgba(10, 22, 40, 0.8) !important;
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.batch-drawer .ant-table-tbody > tr > td {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  color: #cbd5e1 !important;
+  transition: background 0.15s ease;
+}
+
+.batch-drawer .ant-table-tbody > tr:hover > td {
+  background: rgba(124, 58, 237, 0.06) !important;
+}
+
+.batch-drawer .ant-table-pagination {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}

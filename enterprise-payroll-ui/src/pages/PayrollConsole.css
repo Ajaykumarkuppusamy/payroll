@@ -1,0 +1,140 @@
+.console-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.console-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 24px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.console-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.console-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #60a5fa;
+}
+
+.console-title {
+  margin: 0 !important;
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+.console-subtitle {
+  color: #94a3b8 !important;
+  font-size: 13px;
+}
+
+.stat-text {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.run-payroll-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35) !important;
+  font-weight: 500 !important;
+}
+
+.run-payroll-btn:hover {
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+.console-error {
+  border-radius: 10px !important;
+}
+
+.console-table-wrapper {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.console-table .ant-table {
+  background: transparent !important;
+  color: #f8fafc !important;
+}
+
+.console-table .ant-table-thead > tr > th {
+  background: rgba(10, 22, 40, 0.9) !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 14px 16px !important;
+}
+
+.console-table .ant-table-tbody > tr > td {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: #f1f5f9 !important;
+  font-size: 13px !important;
+  padding: 14px 16px !important;
+  transition: background 0.15s ease;
+}
+
+.console-table .ant-table-tbody > tr.clickable-row {
+  cursor: pointer;
+}
+
+.console-table .ant-table-tbody > tr:hover > td {
+  background: rgba(59, 130, 246, 0.06) !important;
+}
+
+.batch-period {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+}
+
+.status-tag {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  border-radius: 6px !important;
+  padding: 2px 8px !important;
+}
+
+.monetary-value {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  font-size: 13px !important;
+  color: #f1f5f9 !important;
+}
+
+.monetary-value.deduction {
+  color: #f87171 !important;
+}
+
+.monetary-value.net-pay {
+  color: #34d399 !important;
+  font-weight: 600 !important;
+}
+
