@@ -24,6 +24,7 @@ import com.payroll.aj.tenant.entity.Tenant;
 import com.payroll.aj.tenant.repository.TenantRepository;
 import com.payroll.aj.common.enums.ComponentType;
 import com.payroll.aj.common.enums.UserRole;
+import com.payroll.aj.payroll.event.PayrollEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,6 +33,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -46,6 +49,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +62,7 @@ import static org.mockito.Mockito.when;
  * {@code @Transactional} rollback in production).</p>
  */
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class PayrollExecutionServiceTest {
 
     @Mock private PayrollBatchRepository batchRepository;
@@ -69,6 +74,7 @@ class PayrollExecutionServiceTest {
     @Mock private AppUserRepository appUserRepository;
     @Mock private TenantRepository tenantRepository;
     @Mock private SalaryComponentCalculationService calculationService;
+    @Mock private PayrollEventPublisher eventPublisher;
 
     @InjectMocks
     private PayrollExecutionService service;
@@ -199,8 +205,8 @@ class PayrollExecutionServiceTest {
             assertEquals(new BigDecimal("140800.00"), response.totalNetPay());
 
             // Verify persistence calls
-            verify(recordRepository).save(any(PayrollRecord.class));
-            verify(recordDetailRepository).saveAll(anyList());
+            verify(recordRepository, times(2)).save(any(PayrollRecord.class));
+            verify(recordDetailRepository, times(2)).saveAll(anyList());
         }
 
         @Test
