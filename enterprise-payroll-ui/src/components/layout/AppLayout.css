@@ -1,19 +1,19 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   AppLayout Styles — Dark Enterprise Shell
+   AppLayout Styles — Light Theme Enterprise Shell
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Root Layout ─────────────────────────────────────────────────────────── */
 
 .app-layout {
   min-height: 100vh;
-  background: #060b18 !important;
+  background: var(--surface-base, #f0f4ff) !important;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+/* ── Sidebar (Deep Indigo — professional contrast) ────────────────────────── */
 
 .app-sider {
-  background: #0a1628 !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: #1e1b4b !important;
+  border-right: none !important;
   position: fixed !important;
   top: 0;
   left: 0;
@@ -21,6 +21,7 @@
   z-index: 100;
   overflow: hidden;
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 2px 0 16px rgba(30, 27, 75, 0.15);
 }
 
 /* Hide AntD's default trigger */
@@ -48,13 +49,13 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
 }
 
 .brand-text {
@@ -66,7 +67,7 @@
 .brand-name {
   font-size: 16px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: #e0e7ff;
   letter-spacing: -0.3px;
   white-space: nowrap;
 }
@@ -74,7 +75,7 @@
 .brand-tagline {
   font-size: 10px;
   font-weight: 500;
-  color: #94a3b8;
+  color: #818cf8;
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
@@ -99,18 +100,18 @@
   margin-bottom: 4px !important;
   height: 44px !important;
   line-height: 44px !important;
-  color: #cbd5e1 !important;
+  color: #a5b4fc !important;
   transition: all 0.2s ease !important;
 }
 
 .app-menu .ant-menu-item:hover {
-  background: rgba(99, 102, 241, 0.15) !important;
+  background: rgba(165, 180, 252, 0.12) !important;
   color: #c7d2fe !important;
 }
 
 .app-menu .ant-menu-item-selected {
-  background: rgba(79, 70, 229, 0.25) !important;
-  color: #a5b4fc !important;
+  background: rgba(165, 180, 252, 0.2) !important;
+  color: #e0e7ff !important;
 }
 
 .app-menu .ant-menu-item-selected::after {
@@ -134,16 +135,16 @@
   gap: 10px;
   padding: 0 20px;
   cursor: pointer;
-  color: #94a3b8;
+  color: #818cf8;
   font-size: 13px;
   font-weight: 500;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.2s ease;
 }
 
 .sider-collapse-btn:hover {
-  color: #818cf8;
-  background: rgba(99, 102, 241, 0.08);
+  color: #c7d2fe;
+  background: rgba(165, 180, 252, 0.1);
 }
 
 .sider-collapse-btn .anticon {
@@ -153,9 +154,8 @@
 /* ── Header ──────────────────────────────────────────────────────────────── */
 
 .app-header {
-  background: rgba(10, 22, 40, 0.85) !important;
-  backdrop-filter: blur(12px) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: #fff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
   padding: 0 24px !important;
   height: 60px !important;
   line-height: 60px !important;
@@ -165,9 +165,9 @@
   position: sticky !important;
   top: 0 !important;
   z-index: 99 !important;
-  /* Offset for fixed sidebar — updated via CSS var in App */
   margin-left: var(--sider-width, 240px);
   transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .header-left {
@@ -179,7 +179,7 @@
 .header-page-title {
   font-size: 16px !important;
   font-weight: 600 !important;
-  color: #e2e8f0 !important;
+  color: #1e293b !important;
   letter-spacing: -0.2px;
 }
 
@@ -197,26 +197,31 @@
   gap: 8px;
   padding: 4px 12px;
   border-radius: 8px;
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(71, 85, 105, 0.4);
+  background: #f0f4ff;
+  border: 1px solid #e0e7ff;
 }
 
 .switcher-icon {
-  color: #64748b;
+  color: #6366f1;
   font-size: 13px;
 }
 
 .company-select {
-  min-width: 130px;
+  min-width: 140px;
 }
 
 .company-select .ant-select-selector {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #94a3b8 !important;
+  color: #4f46e5 !important;
   font-size: 13px !important;
+  font-weight: 600 !important;
   padding: 0 !important;
+}
+
+.company-select .ant-select-arrow {
+  color: #6366f1 !important;
 }
 
 /* ── User Info ───────────────────────────────────────────────────────────── */
@@ -242,7 +247,8 @@
 
 .user-email {
   font-size: 13px !important;
-  color: #cbd5e1 !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
   max-width: 160px;
 }
 
@@ -257,7 +263,7 @@
 }
 
 .header-divider {
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: #e2e8f0 !important;
   height: 20px !important;
 }
 
@@ -268,22 +274,21 @@
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.1) !important;
-  color: #f87171 !important;
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
 }
 
 /* ── Content Area ────────────────────────────────────────────────────────── */
 
 .app-content {
-  padding: 28px 28px;
+  padding: 28px;
   min-height: calc(100vh - 60px);
-  background: #060b18 !important;
-  /* offset for the fixed sidebar */
+  background: var(--surface-base, #f0f4ff) !important;
   margin-left: 240px;
   transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* When sidebar is collapsed (72px wide), shift content */
+/* When sidebar is collapsed */
 .ant-layout-sider-collapsed ~ .ant-layout .app-content,
 .ant-layout-sider-collapsed ~ .ant-layout .app-header {
   margin-left: 72px;

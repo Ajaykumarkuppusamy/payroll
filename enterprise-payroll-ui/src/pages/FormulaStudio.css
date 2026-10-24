@@ -1,16 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   FormulaStudio Page Styles
+   FormulaStudio Page — Light Theme
    ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ── Page Wrapper ────────────────────────────────────────────────────────── */
 
 .studio-page {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
-/* ── Page Header ─────────────────────────────────────────────────────────── */
 
 .studio-header {
   display: flex;
@@ -19,10 +15,9 @@
   flex-wrap: wrap;
   gap: 16px;
   padding: 20px 24px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
   border-radius: 14px;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.25);
 }
 
 .studio-title-group {
@@ -35,230 +30,201 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(79, 70, 229, 0.2));
-  border: 1px solid rgba(124, 58, 237, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  color: #a78bfa;
+  color: #fff;
 }
 
 .studio-title {
   margin: 0 !important;
-  color: #e2e8f0 !important;
-  font-weight: 600 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
 }
 
 .studio-subtitle {
-  color: #94a3b8 !important;
+  color: rgba(255, 255, 255, 0.8) !important;
   font-size: 13px;
 }
 
 .stat-text {
   font-size: 13px;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+}
+
+.add-component-btn {
+  background: #fff !important;
+  border: none !important;
+  color: #7c3aed !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+.add-component-btn:hover {
+  background: #f5f3ff !important;
+  transform: translateY(-1px);
 }
 
 /* ── Toolbar ─────────────────────────────────────────────────────────────── */
 
-.mock-badge {
-  font-size: 11px !important;
-  border-radius: 6px !important;
+.studio-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.studio-search {
-  width: 280px !important;
-  background: rgba(30, 41, 59, 0.8) !important;
-  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+.studio-search .ant-input-affix-wrapper {
+  width: 260px;
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #fff !important;
+}
+
+.studio-filter {
+  width: 160px;
   border-radius: 10px !important;
 }
 
-.studio-search .ant-input {
-  background: transparent !important;
-  color: #f8fafc !important;
+/* ── Catalog Grid ─────────────────────────────────────────────────────────── */
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
 }
 
-.studio-search .ant-input::placeholder { color: #94a3b8 !important; }
-
-.search-icon { color: #94a3b8 !important; }
-
-.refresh-btn {
-  background: rgba(30, 41, 59, 0.8) !important;
-  border: 1px solid rgba(71, 85, 105, 0.5) !important;
-  color: #cbd5e1 !important;
-  border-radius: 10px !important;
-}
-
-.refresh-btn:hover {
-  border-color: rgba(124, 58, 237, 0.5) !important;
-  color: #a78bfa !important;
-}
-
-.add-component-btn {
-  background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
-  border: none !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35) !important;
-  font-weight: 500 !important;
-}
-
-.add-component-btn:hover {
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5) !important;
-  transform: translateY(-1px);
-}
-
-/* ── Alert ───────────────────────────────────────────────────────────────── */
-
-.studio-error { border-radius: 10px !important; }
-
-/* ── Table Wrapper ───────────────────────────────────────────────────────── */
-
-.studio-table-wrapper {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.component-card {
+  background: #fff;
+  border: 1px solid #e8ecf8;
   border-radius: 14px;
-  overflow: hidden;
-  backdrop-filter: blur(8px);
-}
-
-/* ── AntD Dark Table Overrides ───────────────────────────────────────────── */
-
-.studio-table .ant-table {
-  background: transparent !important;
-  color: #f8fafc !important;
-}
-
-.studio-table .ant-table-thead > tr > th {
-  background: rgba(10, 22, 40, 0.9) !important;
-  color: #94a3b8 !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.8px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding: 14px 16px !important;
-}
-
-.studio-table .ant-table-tbody > tr > td {
-  background: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  color: #f1f5f9 !important;
-  font-size: 13px !important;
-  padding: 14px 16px !important;
-  transition: background 0.15s ease;
-}
-
-.studio-table .ant-table-tbody > tr:hover > td {
-  background: rgba(124, 58, 237, 0.08) !important;
-}
-
-.studio-table .ant-table-pagination {
-  padding: 16px !important;
-  margin: 0 !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-/* ── Cell Styles ─────────────────────────────────────────────────────────── */
-
-.code-tag {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-  font-size: 11px !important;
-  border-radius: 5px !important;
-  white-space: nowrap !important;
-}
-
-.component-name-cell {
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
 }
 
-.component-name {
-  font-weight: 500;
-  color: #f8fafc;
+.component-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.12);
+  border-color: #c7d2fe;
+}
+
+.comp-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.comp-name {
   font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
 }
 
-.component-var-hint {
+.comp-code {
+  font-size: 11px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #4f46e5;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.comp-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.comp-formula-block {
+  background: #f8f9ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #4f46e5;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  word-break: break-all;
+}
+
+.comp-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+.meta-text {
   font-size: 12px;
   color: #94a3b8;
+  font-weight: 500;
 }
 
-.spel-var {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: #818cf8;
-  background: rgba(99, 102, 241, 0.1);
-  padding: 1px 5px;
-  border-radius: 4px;
+.comp-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
 }
-
-.type-tag {
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  border-radius: 6px !important;
-  padding: 2px 8px !important;
-}
-
-.calc-tag {
-  font-size: 11px !important;
-  border-radius: 6px !important;
-  font-weight: 500 !important;
-}
-
-.flat-value {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 13px !important;
-  color: #34d399 !important;
-  font-weight: 600 !important;
-}
-
-.pct-value {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 13px !important;
-  color: #a78bfa !important;
-  font-weight: 600 !important;
-}
-
-.formula-cell {
-  display: block;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.08);
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(245, 158, 11, 0.15);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 260px;
-}
-
-.flag-tag {
-  font-size: 10px !important;
-  border-radius: 5px !important;
-  padding: 0 6px !important;
-  line-height: 18px !important;
-}
-
-/* ── Test Button ─────────────────────────────────────────────────────────── */
 
 .test-formula-btn {
   border-radius: 8px !important;
   font-size: 12px !important;
-  font-weight: 500 !important;
-  border-color: rgba(124, 58, 237, 0.4) !important;
-  color: #a78bfa !important;
-  background: rgba(124, 58, 237, 0.08) !important;
-  transition: all 0.2s ease !important;
+  height: 30px !important;
+  border-color: #e2e8f0 !important;
+  color: #6366f1 !important;
+  font-weight: 600 !important;
 }
 
-.test-formula-btn:not(:disabled):hover {
-  border-color: rgba(124, 58, 237, 0.8) !important;
-  background: rgba(124, 58, 237, 0.15) !important;
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.3) !important;
+.test-formula-btn:hover {
+  border-color: #6366f1 !important;
+  color: #4f46e5 !important;
+}
+
+/* ── Empty / Loading States ──────────────────────────────────────────────── */
+
+.studio-empty {
+  background: #fff;
+  border: 1px solid #e8ecf8;
+  border-radius: 14px;
+  padding: 48px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.studio-loading {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+/* ── Create Component Modal ──────────────────────────────────────────────── */
+
+.formula-hint {
+  font-size: 12px;
+  color: #6366f1;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
 }

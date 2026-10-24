@@ -16,6 +16,7 @@ import {
   TeamOutlined,
   CalculatorOutlined,
   PlayCircleOutlined,
+  FileTextOutlined,
   LogoutOutlined,
   SafetyCertificateOutlined,
   MenuFoldOutlined,
@@ -52,6 +53,11 @@ const NAV_ITEMS = [
     key: '/payroll-console',
     icon: <PlayCircleOutlined />,
     label: 'Payroll Console',
+  },
+  {
+    key: '/reports',
+    icon: <FileTextOutlined />,
+    label: 'Reports',
   },
 ];
 
@@ -143,6 +149,7 @@ const AppLayout: React.FC = () => {
           onClick={handleNavSelect}
           className="app-menu"
           inlineCollapsed={collapsed}
+          style={{ background: 'transparent' }}
         />
 
         {/* Collapse Toggle */}

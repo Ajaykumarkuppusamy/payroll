@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import EmployeeDirectory from './pages/EmployeeDirectory';
 import FormulaStudio from './pages/FormulaStudio';
 import PayrollConsole from './pages/PayrollConsole';
+import Reports from './pages/Reports';
 import './index.css';
 
 /**
@@ -18,6 +19,7 @@ import './index.css';
  *     /employees          → HR Employee Directory
  *     /formula-studio     → Formula Studio
  *     /payroll-console    → Payroll Console
+ *     /reports            → Reports & Payslips
  *     /                   → Redirects to /dashboard
  *   *                     → Catch-all → /login
  */
@@ -36,6 +38,7 @@ function App() {
             <Route path="/employees" element={<EmployeeDirectory />} />
             <Route path="/formula-studio" element={<FormulaStudio />} />
             <Route path="/payroll-console" element={<PayrollConsole />} />
+            <Route path="/reports" element={<Reports />} />
           </Route>
         </Route>
 

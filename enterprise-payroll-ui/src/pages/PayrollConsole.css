@@ -1,3 +1,7 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PayrollConsole Page — Light Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .console-page {
   display: flex;
   flex-direction: column;
@@ -11,10 +15,9 @@
   flex-wrap: wrap;
   gap: 16px;
   padding: 20px 24px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, #0ea5e9 0%, #4f46e5 100%);
   border-radius: 14px;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.25);
 }
 
 .console-title-group {
@@ -27,42 +30,45 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  color: #60a5fa;
+  color: #fff;
 }
 
 .console-title {
   margin: 0 !important;
-  color: #e2e8f0 !important;
-  font-weight: 600 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
 }
 
 .console-subtitle {
-  color: #94a3b8 !important;
+  color: rgba(255, 255, 255, 0.8) !important;
   font-size: 13px;
 }
 
 .stat-text {
   font-size: 13px;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
 }
 
 .run-payroll-btn {
-  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  background: #fff !important;
   border: none !important;
+  color: #0ea5e9 !important;
   border-radius: 10px !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35) !important;
-  font-weight: 500 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
 }
 
 .run-payroll-btn:hover {
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5) !important;
+  background: #f0f9ff !important;
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2) !important;
 }
 
 .console-error {
@@ -70,32 +76,32 @@
 }
 
 .console-table-wrapper {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #fff;
+  border: 1px solid #e8ecf8;
   border-radius: 14px;
   overflow: hidden;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
 .console-table .ant-table {
   background: transparent !important;
-  color: #f8fafc !important;
 }
 
 .console-table .ant-table-thead > tr > th {
-  background: rgba(10, 22, 40, 0.9) !important;
-  color: #94a3b8 !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
+  background: #f8f9ff !important;
+  color: #6b7280 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  letter-spacing: 0.6px !important;
+  border-bottom: 2px solid #eef2ff !important;
   padding: 14px 16px !important;
 }
 
 .console-table .ant-table-tbody > tr > td {
   background: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  color: #f1f5f9 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #374151 !important;
   font-size: 13px !important;
   padding: 14px 16px !important;
   transition: background 0.15s ease;
@@ -106,35 +112,36 @@
 }
 
 .console-table .ant-table-tbody > tr:hover > td {
-  background: rgba(59, 130, 246, 0.06) !important;
+  background: #f0f9ff !important;
 }
 
 .batch-period {
   font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #e2e8f0 !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
 }
 
 .status-tag {
   font-size: 11px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
   border-radius: 6px !important;
   padding: 2px 8px !important;
+  letter-spacing: 0.4px !important;
 }
 
 .monetary-value {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
   font-size: 13px !important;
-  color: #f1f5f9 !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  font-variant-numeric: tabular-nums;
 }
 
 .monetary-value.deduction {
-  color: #f87171 !important;
+  color: #ef4444 !important;
 }
 
 .monetary-value.net-pay {
-  color: #34d399 !important;
-  font-weight: 600 !important;
+  color: #059669 !important;
+  font-weight: 700 !important;
 }
-

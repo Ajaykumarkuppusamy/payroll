@@ -333,3 +333,164 @@ Implemented the full payroll batch execution pipeline: idempotent batch creation
 ## Verification
 
 - ✅ `mvnw test-compile` — **BUILD SUCCESS** (exit code 0, zero errors)
+
+---
+
+# Phase 5 — Live Data Integration & UI Modernization
+
+## Overview
+
+Replaced all mock/dummy data across the frontend with live API calls, built an executive dashboard with real-time KPIs, created a full employee onboarding flow, and modernized the entire UI for readability and premium aesthetics.
+
+---
+
+## Backend Additions
+
+### New Controllers & Services
+| File | Purpose |
+|------|---------|
+| [`DashboardController`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/controller/DashboardController.java) | `GET /api/v1/dashboard?companyId=` — Returns KPIs, dept breakdown, recent joiners |
+| [`DashboardService`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/service/DashboardService.java) | Aggregate queries: headcount, payroll cost, dept stats |
+| [`SalaryComponentController`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/controller/SalaryComponentController.java) | `GET /api/v1/salary-components`, `POST /api/v1/salary-components` |
+| [`SalaryComponentService`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/service/SalaryComponentService.java) | Component catalog CRUD with conflict checks |
+| [`CompanyController`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/organization/controller/CompanyController.java) | `GET /api/v1/companies` — scoped to user's accessible companies |
+| [`DepartmentController`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/organization/controller/DepartmentController.java) | `GET /api/v1/departments?companyId=` |
+| [`EmployeeController`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/employee/controller/EmployeeController.java) | Full CRUD: list, get, create (POST), update (PUT) |
+| [`GlobalExceptionHandler`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/common/exception/GlobalExceptionHandler.java) | `@RestControllerAdvice`: handles validation (400), conflict (409), access denied (403), not found (404) |
+
+### Enhanced Services
+| File | Change |
+|------|--------|
+| [`EmployeeService`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/employee/service/EmployeeService.java) | Added `createEmployee()` — onboards with auto salary structure init; `updateEmployee()` — partial field update |
+| [`AppUserDetailsService`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/security/userdetails/AppUserDetailsService.java) | SUPER_ADMIN now gets all company IDs automatically from DB |
+| [`CompanyRepository`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/organization/repository/CompanyRepository.java) | Added `findActiveByIdsWithCountry()` JOIN FETCH; `findByTenantIdWithCountry()` |
+| [`DepartmentRepository`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/organization/repository/DepartmentRepository.java) | `findActiveByCompanyId()` for filtered dept lists |
+
+### Rich Seed Data (V5__rich_seed_data.sql)
+- **+4 departments** (Operations, Product Management, Marketing, QA)
+- **+7 salary components** (Special Allowance, LTA, Medical, Conveyance, Professional Tax, ESI, TDS)
+- **+15 realistic Indian employees** (IDs 6–20) with bank details, IFSC codes, real PAN numbers
+- **Admin scoping** — SUPER_ADMIN (id=1) gets explicit UserCompanyAccess rows for both companies
+
+---
+
+## Frontend Additions
+
+### New API Modules (no more mocks)
+| File | Endpoints |
+|------|---------|
+| [`api/dashboard.ts`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/api/dashboard.ts) | `getDashboardData(companyId)` |
+| [`api/employee.ts`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/api/employee.ts) | `listEmployees()`, `createEmployee()`, `updateEmployee()` |
+| [`api/company.ts`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/api/company.ts) | `listCompanies()` |
+| [`api/component.ts`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/api/component.ts) | `listComponents()`, `createComponent()`, `testFormula()` |
+| [`api/payroll.ts`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/api/payroll.ts) | `runPayroll()`, `listBatches()`, `getBatchRecords()` |
+
+### New & Updated Pages
+| File | Changes |
+|------|---------|
+| [`Dashboard.tsx`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/pages/Dashboard.tsx) | **NEW** — KPI cards, dept progress bars, recent joiners, quick actions |
+| [`EmployeeDirectory.tsx`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/pages/EmployeeDirectory.tsx) | Replaced `MOCK_EMPLOYEES` with live API; integrated AddEmployeeModal |
+| [`FormulaStudio.tsx`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/pages/FormulaStudio.tsx) | Replaced `MOCK_COMPONENTS` with live catalog; create modal |
+| [`PayrollConsole.tsx`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/pages/PayrollConsole.tsx) | Replaced `MOCK_BATCHES` with live batch list + execution |
+| [`AppLayout.tsx`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/components/layout/AppLayout.tsx) | Live company switcher; dark sidebar with active route highlight |
+
+### New Components
+| File | Purpose |
+|------|---------|
+| [`AddEmployeeModal.tsx`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-ui/src/components/employees/AddEmployeeModal.tsx) | Full employee onboarding form (name, email, dept, salary, PAN, bank) |
+
+### UI/CSS Improvements
+- **`index.css`** — Global dark theme with high-contrast CSS variables
+- **`Dashboard.css`** — KPI card gradients, dept bar charts, premium layout
+- **`EmployeeDirectory.css`** — Readable table, status badge colors
+- **`PayrollConsole.css`** — Batch status colors, timeline feel
+- **`FormulaStudio.css`** — Code-editor aesthetic for formula display
+- **`AppLayout.css`** — Collapsible sidebar, glass header
+
+## Key Design Decisions (Phase 5)
+
+1. **Zero mocks in production code** — All `MOCK_*` arrays replaced with live `useEffect` + API calls.
+2. **Optimistic loading** — Pages show loading spinners while fetching; errors shown as alerts.
+3. **Auto salary structure** — `createEmployee()` in backend automatically assigns all active salary components for the employee's country.
+4. **INR formatting** — `Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' })` used consistently.
+5. **Company-scoped queries** — Every API call passes `companyId` from Zustand `activeCompanyId`.
+
+## Verification
+
+- ✅ `mvnw compile` — **BUILD SUCCESS** (exit code 0, zero errors)
+- ✅ `npm run build` — **Vite build success** (zero TypeScript errors)
+
+---
+
+# Phase 6 — DevOps & GitHub
+
+## Overview
+
+Configured version control, created proper `.gitignore`, and pushed the full codebase to GitHub.
+
+---
+
+## Infrastructure
+
+### Docker Compose
+All infrastructure services defined in [`docker-compose.yml`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/docker-compose.yml):
+
+| Service | Image | Port | Purpose |
+|---------|-------|------|---------|
+| PostgreSQL | `postgres:16-alpine` | 5433 | Primary database |
+| Redis | `redis:7-alpine` | 6379 | Session/rate-limit cache |
+| Kafka | `confluentinc/cp-kafka:latest` (KRaft) | 9092 | Async payslip events |
+| MinIO | `quay.io/minio/minio:latest` | 9000/9001 | PDF payslip object storage |
+
+### Startup Commands
+```bash
+# 1. Start all infrastructure
+cd enterprise-payroll-api
+docker compose up -d
+
+# 2. Start backend (Spring Boot)
+./mvnw spring-boot:run
+# OR on Windows:
+mvnw.cmd spring-boot:run
+
+# 3. Start frontend (Vite dev server)
+cd ../enterprise-payroll-ui
+npm run dev
+```
+
+### Access Points
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| Frontend | http://localhost:5173 | — |
+| Backend API | http://localhost:8080 | — |
+| MinIO Console | http://localhost:9001 | minioadmin / minioadmin |
+| pgAdmin / psql | localhost:5433/payroll_db | payroll_admin / changeme |
+
+## GitHub
+- **Repository**: https://github.com/Ajaykumarkuppusamy/payroll
+- **Branch**: `main`
+- **Initial Commit**: All 6 phases, full codebase
+
+### .gitignore Coverage
+```
+enterprise-payroll-api/target/     ← Maven build output
+enterprise-payroll-ui/node_modules/ ← npm packages
+enterprise-payroll-ui/dist/        ← Vite production build
+*.env / application-local.yml      ← Secrets
+*.log                              ← Runtime logs
+```
+
+## Known Startup Issues
+
+> **IDE "Run Java" button** — The VS Code/IDE run button executes compiled `.class` files directly, bypassing Maven classpath. This causes `SpringApplication cannot be resolved`. Always use `./mvnw spring-boot:run` instead.
+
+> **Kafka/MinIO optional** — Payroll execution works without Kafka/MinIO. PDF generation will log an error but core salary calculations still complete and save to the database.
+
+> **First-time DB reset** — If Flyway fails with schema conflicts: `docker compose down -v && docker compose up -d`
+
+## Verification
+
+- ✅ Git initialized and committed with full project history
+- ✅ Pushed to `https://github.com/Ajaykumarkuppusamy/payroll`
+- ✅ `.gitignore` excludes build artifacts, secrets, and node_modules
+
