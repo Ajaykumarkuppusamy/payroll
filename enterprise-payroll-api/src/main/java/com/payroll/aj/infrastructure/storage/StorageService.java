@@ -24,4 +24,12 @@ public interface StorageService {
      * @return the pre-signed URL
      */
     String generatePresignedUrl(String objectPath, Duration expiry);
+
+    /**
+     * Downloads an object from storage as a byte array.
+     *
+     * @param objectPath the exact path/key of the object
+     * @return the file bytes
+     */
+    byte[] downloadPdf(String objectPath);
 }

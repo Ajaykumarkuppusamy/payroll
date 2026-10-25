@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="payroll_summary_template" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <parameter name="companyName" class="java.lang.String"/>
+    <parameter name="payPeriod" class="java.lang.String"/>
+    <parameter name="batchStatus" class="java.lang.String"/>
+    <parameter name="executedBy" class="java.lang.String"/>
+    <parameter name="totalGross" class="java.lang.String"/>
+    <parameter name="totalDeductions" class="java.lang.String"/>
+    <parameter name="totalNet" class="java.lang.String"/>
+
+    <field name="employeeCode" class="java.lang.String"/>
+    <field name="employeeName" class="java.lang.String"/>
+    <field name="department" class="java.lang.String"/>
+    <field name="panNumber" class="java.lang.String"/>
+    <field name="bankAccount" class="java.lang.String"/>
+    <field name="grossPay" class="java.math.BigDecimal"/>
+    <field name="deductions" class="java.math.BigDecimal"/>
+    <field name="netPay" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="75" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="802" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{companyName} + " — Payroll Master Register"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="25" width="802" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Pay Period: " + $P{payPeriod} + " | Batch Status: " + $P{batchStatus} + " | Executed By: " + $P{executedBy}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="55" width="802" height="1"/>
+            </line>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="70" height="25"/>
+                <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Emp Code]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="70" y="0" width="150" height="25"/>
+                <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Employee Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="220" y="0" width="130" height="25"/>
+                <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Department]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="350" y="0" width="100" height="25"/>
+                <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[PAN Number]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="450" y="0" width="110" height="25"/>
+                <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Bank Account]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="560" y="0" width="80" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Gross Pay]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="640" y="0" width="80" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Deductions]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="720" y="0" width="82" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Net Salary]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="70" height="20"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{employeeCode}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="70" y="0" width="150" height="20"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{employeeName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="220" y="0" width="130" height="20"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{department}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="0" width="100" height="20"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{panNumber}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="0" width="110" height="20"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{bankAccount}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="560" y="0" width="80" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{grossPay}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="640" y="0" width="80" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{deductions}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="720" y="0" width="82" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{netPay}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="50" splitType="Stretch">
+            <line>
+                <reportElement x="0" y="5" width="802" height="1"/>
+            </line>
+            <staticText>
+                <reportElement x="450" y="10" width="110" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="11" isBold="true"/></textElement>
+                <text><![CDATA[Grand Total:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="560" y="10" width="80" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{totalGross}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="640" y="10" width="80" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{totalDeductions}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="720" y="10" width="82" height="25"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{totalNet}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

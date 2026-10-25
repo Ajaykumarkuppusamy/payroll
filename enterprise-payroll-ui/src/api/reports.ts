@@ -1,14 +1,74 @@
-/**
- * Reports API — Payslip PDF, Payroll Excel, and future reports.
- * The backend generates PDFs via JasperReports and serves them as file streams.
- * Excel is generated server-side and downloaded as a blob.
- */
 import axiosInstance from './axios';
 
+export interface ReportCatalogItem {
+  code: string;
+  title: string;
+  category: string;
+  description: string;
+  requiredParameters: string[];
+  supportedFormats: string[];
+}
+
+export interface ExecuteReportRequest {
+  reportCode: string;
+  companyId?: number;
+  batchId?: number;
+  employeeId?: number;
+  format?: 'PDF' | 'EXCEL' | 'CSV';
+}
+
+export interface ExecuteReportResponse {
+  jobId: string;
+  reportCode: string;
+  status: string;
+  previewUrl: string;
+  downloadUrl: string;
+  message: string;
+}
+
 /**
- * Download payslip PDF for a specific employee + batch.
- * Backend: GET /api/v1/reports/payslip/{batchId}/{employeeId}
- * Returns a blob → triggers browser download.
+ * Fetch available reports catalog from backend
+ */
+export async function fetchReportCatalog(): Promise<ReportCatalogItem[]> {
+  const response = await axiosInstance.get<ReportCatalogItem[]>('/reports/catalog');
+  return response.data;
+}
+
+/**
+ * Execute report: triggers backend stored procedure -> stages data in report_staging_data -> runs JasperReports -> returns job response
+ */
+export async function executeReport(request: ExecuteReportRequest): Promise<ExecuteReportResponse> {
+  const response = await axiosInstance.post<ExecuteReportResponse>('/reports/execute', request);
+  return response.data;
+}
+
+/**
+ * Fetch PDF preview blob for an executed report job
+ */
+export async function getReportPdfBlob(jobId: string): Promise<Blob> {
+  const response = await axiosInstance.get<Blob>(`/reports/preview/${jobId}`, {
+    responseType: 'blob',
+  });
+  return new Blob([response.data], { type: 'application/pdf' });
+}
+
+/**
+ * Trigger browser file download of generated PDF
+ */
+export async function downloadReportFile(jobId: string, customFileName?: string): Promise<void> {
+  const blob = await getReportPdfBlob(jobId);
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', customFileName || `report_${jobId}.pdf`);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+/**
+ * Direct shortcut to download employee payslip PDF
  */
 export async function downloadPayslipPdf(batchId: number, employeeId: number): Promise<void> {
   const response = await axiosInstance.get<Blob>(
@@ -19,48 +79,6 @@ export async function downloadPayslipPdf(batchId: number, employeeId: number): P
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `payslip_${batchId}_emp${employeeId}.pdf`);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
-}
-
-/**
- * Download payroll summary Excel for a batch.
- * Backend: GET /api/v1/reports/payroll-summary/{batchId}
- */
-export async function downloadPayrollExcel(batchId: number): Promise<void> {
-  const response = await axiosInstance.get<Blob>(
-    `/reports/payroll-summary/${batchId}`,
-    { responseType: 'blob' }
-  );
-  const url = window.URL.createObjectURL(
-    new Blob([response.data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    })
-  );
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', `payroll_summary_batch${batchId}.xlsx`);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
-}
-
-/**
- * Download department headcount PDF.
- * Backend: GET /api/v1/reports/headcount/{companyId}
- */
-export async function downloadHeadcountPdf(companyId: number): Promise<void> {
-  const response = await axiosInstance.get<Blob>(
-    `/reports/headcount/${companyId}`,
-    { responseType: 'blob' }
-  );
-  const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', `headcount_report_${companyId}.pdf`);
   document.body.appendChild(link);
   link.click();
   link.remove();

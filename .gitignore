@@ -1,6 +1,9 @@
 # Maven
 enterprise-payroll-api/target/
 enterprise-payroll-api/.mvn/wrapper/maven-wrapper.jar
+/aj/
+target/
+
 
 # Node / Vite
 enterprise-payroll-ui/node_modules/

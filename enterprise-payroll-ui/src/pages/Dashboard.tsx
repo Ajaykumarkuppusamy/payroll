@@ -186,8 +186,8 @@ const Dashboard: React.FC = () => {
                     data.last_batch.status === 'COMPLETED'
                       ? 'green'
                       : data.last_batch.status === 'PROCESSING'
-                      ? 'processing'
-                      : 'default'
+                        ? 'processing'
+                        : 'default'
                   }
                   icon={
                     data.last_batch.status === 'COMPLETED' ? (
@@ -290,7 +290,7 @@ const Dashboard: React.FC = () => {
                       <div className="recent-emp-cell">
                         <div className="emp-tiny-avatar">{initials}</div>
                         <div>
-                          <div style={{ fontWeight: 500, color: '#f8fafc' }}>
+                          <div style={{ fontWeight: 500 }}>
                             {emp.first_name} {emp.last_name}
                           </div>
                           <span className="emp-code-chip">{emp.employee_code}</span>
@@ -306,10 +306,10 @@ const Dashboard: React.FC = () => {
                           emp.employment_status === 'ACTIVE'
                             ? 'green'
                             : emp.employment_status === 'ON_LEAVE'
-                            ? 'gold'
-                            : emp.employment_status === 'PROBATION'
-                            ? 'blue'
-                            : 'red'
+                              ? 'gold'
+                              : emp.employment_status === 'PROBATION'
+                                ? 'blue'
+                                : 'red'
                         }
                       >
                         {emp.employment_status}

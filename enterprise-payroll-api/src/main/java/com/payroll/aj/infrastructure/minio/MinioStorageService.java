@@ -2,6 +2,7 @@ package com.payroll.aj.infrastructure.minio;
 
 import com.payroll.aj.infrastructure.storage.StorageService;
 import io.minio.BucketExistsArgs;
+import io.minio.GetObjectArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -69,6 +71,19 @@ public class MinioStorageService implements StorageService {
         } catch (Exception e) {
             log.error("Failed to generate presigned URL for path: {}", objectPath, e);
             throw new RuntimeException("Failed to generate presigned URL", e);
+        }
+    }
+
+    @Override
+    public byte[] downloadPdf(String objectPath) {
+        try (InputStream stream = minioClient.getObject(GetObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectPath)
+                .build())) {
+            return stream.readAllBytes();
+        } catch (Exception e) {
+            log.error("Failed to download file from MinIO path: {}", objectPath, e);
+            throw new RuntimeException("Failed to download file from MinIO", e);
         }
     }
 }

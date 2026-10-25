@@ -1,413 +1,463 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Select, Button, Spin, Alert, Typography, Tag, Divider, Empty } from 'antd';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Button, Spin, Alert, Typography, Tag, Select, Card, Empty } from 'antd';
 import {
   FilePdfOutlined,
-  FileExcelOutlined,
-  PrinterOutlined,
-  UserOutlined,
-  BankOutlined,
-  CalendarOutlined,
+  PlayCircleOutlined,
   DownloadOutlined,
+  ReloadOutlined,
+  CheckCircleOutlined,
+  BarChartOutlined,
+  TeamOutlined,
+  SafetyCertificateOutlined,
+  CalendarOutlined,
+  UserOutlined,
+  ApartmentOutlined,
 } from '@ant-design/icons';
 import useAuthStore from '../store/useAuthStore';
 import { getEmployees, type Employee } from '../api/employee';
-import { getBatches, getBatchRecords, type PayrollBatchResponse, type PayrollRecordResponse } from '../api/payroll';
-import { downloadPayslipPdf, downloadPayrollExcel } from '../api/reports';
+import { getBatches, type PayrollBatchResponse } from '../api/payroll';
+import {
+  fetchReportCatalog,
+  executeReport,
+  getReportPdfBlob,
+  downloadReportFile,
+  type ReportCatalogItem,
+  type ExecuteReportResponse,
+} from '../api/reports';
 import './Reports.css';
 
-const { Title, Text } = Typography;
-
-const formatINR = (v: number) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
+const { Title, Text, Paragraph } = Typography;
 
 const MONTH_NAMES = [
   '', 'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
+const formatINR = (v: number) =>
+  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
+
 const Reports: React.FC = () => {
   const { activeCompanyId } = useAuthStore();
 
+  // Catalog & Options
+  const [catalog, setCatalog] = useState<ReportCatalogItem[]>([]);
+  const [selectedReportCode, setSelectedReportCode] = useState<string>('EMP_PAYSLIP');
+  const [batches, setBatches] = useState<PayrollBatchResponse[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [batches, setBatches]     = useState<PayrollBatchResponse[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<number | null>(null);
-  const [selectedBatch, setSelectedBatch]       = useState<number | null>(null);
-  const [record, setRecord]       = useState<PayrollRecordResponse | null>(null);
-  const [loading, setLoading]     = useState(false);
-  const [pdfLoading, setPdfLoading]     = useState(false);
-  const [excelLoading, setExcelLoading] = useState(false);
-  const [error, setError]         = useState<string | null>(null);
 
-  /* Load employees + completed batches on mount */
+  // Selected Parameters
+  const [selectedBatchId, setSelectedBatchId] = useState<number | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
+
+  // Execution & Preview State
+  const [executing, setExecuting] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [currentJob, setCurrentJob] = useState<ExecuteReportResponse | null>(null);
+  const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load catalog on mount
+  useEffect(() => {
+    fetchReportCatalog()
+      .then((items) => {
+        setCatalog(items);
+        if (items.length > 0 && !selectedReportCode) {
+          setSelectedReportCode(items[0].code);
+        }
+      })
+      .catch(() => setError('Failed to load report catalog. Please verify backend service status.'));
+  }, [selectedReportCode]);
+
+  // Load company batches and employees when company changes
   useEffect(() => {
     if (!activeCompanyId) return;
-    setLoading(true);
-    Promise.all([
-      getEmployees(activeCompanyId),
-      getBatches(activeCompanyId),
-    ])
-      .then(([emps, bats]) => {
-        setEmployees(emps);
-        setBatches(bats.filter((b) => b.status === 'COMPLETED'));
-      })
-      .catch(() => setError('Failed to load data. Ensure the backend is running.'))
-      .finally(() => setLoading(false));
-  }, [activeCompanyId]);
-
-  /* Load payslip record when employee + batch are both selected */
-  const loadRecord = useCallback(async () => {
-    if (!selectedBatch || !selectedEmployee) return;
-    setLoading(true);
+    setLoadingData(true);
     setError(null);
-    setRecord(null);
-    try {
-      const page = await getBatchRecords(selectedBatch);
-      const records: PayrollRecordResponse[] = page.content ?? (page as unknown as PayrollRecordResponse[]);
-      const match = records.find((r) => r.employee_id === selectedEmployee);
-      if (match) {
-        setRecord(match);
-      } else {
-        setError('No payroll record found for this employee in the selected batch.');
+    Promise.all([
+      getBatches(activeCompanyId),
+      getEmployees(activeCompanyId),
+    ])
+      .then(([bList, eList]) => {
+        const completed = bList.filter((b) => b.status === 'COMPLETED');
+        setBatches(completed);
+        setEmployees(eList);
+        if (completed.length > 0 && !selectedBatchId) {
+          setSelectedBatchId(completed[0].batch_id);
+        }
+        if (eList.length > 0 && !selectedEmployeeId) {
+          setSelectedEmployeeId(eList[0].id);
+        }
+      })
+      .catch(() => setError('Failed to retrieve payroll batches or employees for the active company.'))
+      .finally(() => setLoadingData(false));
+  }, [activeCompanyId, selectedBatchId, selectedEmployeeId]);
+
+  // Cleanup object URLs when preview changes
+  useEffect(() => {
+    return () => {
+      if (previewBlobUrl) {
+        window.URL.revokeObjectURL(previewBlobUrl);
       }
-    } catch {
-      setError('Failed to load payslip. Please try again.');
-    } finally {
-      setLoading(false);
+    };
+  }, [previewBlobUrl]);
+
+  // Current active report item from catalog
+  const activeReport = useMemo(
+    () => catalog.find((c) => c.code === selectedReportCode),
+    [catalog, selectedReportCode]
+  );
+
+  // Reset preview when switching reports
+  const handleSelectReport = (code: string) => {
+    if (code === selectedReportCode) return;
+    setSelectedReportCode(code);
+    setCurrentJob(null);
+    if (previewBlobUrl) {
+      window.URL.revokeObjectURL(previewBlobUrl);
+      setPreviewBlobUrl(null);
     }
-  }, [selectedBatch, selectedEmployee]);
+    setError(null);
+  };
 
-  useEffect(() => { void loadRecord(); }, [loadRecord]);
+  // Run Report: Staging -> Jasper compile/fill -> MinIO -> Blob Preview
+  const handleExecuteReport = async () => {
+    if (!activeCompanyId) {
+      setError('Please select an active company first.');
+      return;
+    }
 
-  const handleDownloadPdf = async () => {
-    if (!selectedBatch || !selectedEmployee) return;
-    setPdfLoading(true);
+    if (selectedReportCode === 'EMP_PAYSLIP' && (!selectedBatchId || !selectedEmployeeId)) {
+      setError('Both a Payroll Batch and an Employee are required for generating an individual payslip.');
+      return;
+    }
+
+    if (selectedReportCode === 'PAYROLL_SUMMARY' && !selectedBatchId) {
+      setError('A Payroll Batch is required for generating the company payroll register.');
+      return;
+    }
+
+    setExecuting(true);
+    setError(null);
+
     try {
-      await downloadPayslipPdf(selectedBatch, selectedEmployee);
-    } catch {
-      setError('PDF download failed. Ensure Jasper Reports and MinIO are configured in the backend.');
+      const response = await executeReport({
+        reportCode: selectedReportCode,
+        companyId: activeCompanyId,
+        batchId: selectedBatchId ?? undefined,
+        employeeId: selectedEmployeeId ?? undefined,
+        format: 'PDF',
+      });
+
+      setCurrentJob(response);
+
+      // Fetch the generated PDF blob for in-browser streaming preview
+      const pdfBlob = await getReportPdfBlob(response.jobId);
+      if (previewBlobUrl) {
+        window.URL.revokeObjectURL(previewBlobUrl);
+      }
+      const newBlobUrl = window.URL.createObjectURL(pdfBlob);
+      setPreviewBlobUrl(newBlobUrl);
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || 'Report generation failed. Please try again.';
+      setError(msg);
     } finally {
-      setPdfLoading(false);
+      setExecuting(false);
     }
   };
 
-  const handleDownloadExcel = async () => {
-    if (!selectedBatch) return;
-    setExcelLoading(true);
+  // Export PDF Button handler
+  const handleExportPdf = async () => {
+    if (!currentJob) return;
+    setDownloading(true);
     try {
-      await downloadPayrollExcel(selectedBatch);
+      const fileName = `${selectedReportCode.toLowerCase()}_${currentJob.jobId.slice(0, 8)}.pdf`;
+      await downloadReportFile(currentJob.jobId, fileName);
     } catch {
-      setError('Excel download failed. Ensure the backend reports endpoint is available.');
+      setError('Failed to download exported PDF. Please try again.');
     } finally {
-      setExcelLoading(false);
+      setDownloading(false);
     }
   };
-
-  const emp   = employees.find((e) => e.id === selectedEmployee);
-  const batch = batches.find((b) => b.batch_id === selectedBatch);
-
-  /* Details are line items on the record */
-  const details  = (record?.details ?? []) as Array<{
-    componentCode: string;
-    componentName: string;
-    componentType: 'EARNING' | 'DEDUCTION';
-    amount: number;
-    isStatutory: boolean;
-  }>;
-  const earnings   = details.filter((d) => d.componentType === 'EARNING');
-  const deductions = details.filter((d) => d.componentType === 'DEDUCTION');
 
   return (
-    <div className="reports-page">
-      {/* ── Header ─────────────────────────────────────── */}
-      <div className="reports-header">
-        <div className="reports-title-group">
-          <div className="reports-icon"><FilePdfOutlined /></div>
+    <div className="reports-page-container">
+      {/* ── Top Header Banner ─────────────────────────────────── */}
+      <div className="reports-hero-banner">
+        <div className="reports-hero-left">
+          <div className="reports-hero-icon">
+            <FilePdfOutlined />
+          </div>
           <div>
-            <Title level={4} className="reports-title">Reports &amp; Payslips</Title>
-            <Text className="reports-subtitle">Download payslips and payroll summaries</Text>
+            <Title level={3} className="reports-hero-title">
+              Enterprise Reporting Center
+            </Title>
+            <Text className="reports-hero-subtitle">
+              Staging-backed JasperReports engine with direct MinIO artifact storage &amp; high-fidelity preview
+            </Text>
           </div>
         </div>
-        <div className="reports-actions">
-          <Button
-            icon={<FileExcelOutlined />}
-            className="excel-btn"
-            loading={excelLoading}
-            disabled={!selectedBatch}
-            onClick={handleDownloadExcel}
-          >
-            Download Payroll Excel
-          </Button>
+        <div className="reports-hero-right">
+          <Tag color="cyan" className="reports-tag-pill">
+            <SafetyCertificateOutlined /> Enterprise Jasper 6.21
+          </Tag>
+          <Tag color="blue" className="reports-tag-pill">
+            <ApartmentOutlined /> Active Company ID: {activeCompanyId ?? 'N/A'}
+          </Tag>
         </div>
       </div>
 
       {error && (
-        <Alert type="error" message={error} showIcon closable onClose={() => setError(null)} />
+        <Alert
+          type="error"
+          message="Report Processing Notice"
+          description={error}
+          showIcon
+          closable
+          onClose={() => setError(null)}
+          className="reports-alert"
+        />
       )}
 
-      {/* ── Filter Panel ────────────────────────────────── */}
-      <div className="reports-filters">
-        <div className="filter-card">
-          <div className="filter-group">
-            <label className="filter-label">
-              <CalendarOutlined /> &nbsp;Payroll Batch (Completed)
-            </label>
-            <Select
-              value={selectedBatch ?? undefined}
-              onChange={(v: number) => { setSelectedBatch(v); setRecord(null); setError(null); }}
-              placeholder="Select payroll period..."
-              className="filter-select"
-              allowClear
-              loading={loading && batches.length === 0}
-              options={batches.map((b) => ({
-                value: b.batch_id,
-                label: `${MONTH_NAMES[b.month]} ${b.year}  •  ${formatINR(b.total_net_pay)}`,
-              }))}
-            />
+      {/* ── STEP 1: Report Selection Grid ─────────────────────── */}
+      <div className="reports-section-card">
+        <div className="reports-section-header">
+          <div className="step-indicator">Step 1</div>
+          <Title level={4} className="section-title">Select Report Template</Title>
+        </div>
+
+        <div className="report-catalog-grid">
+          {/* Payslip */}
+          <Card
+            hoverable
+            className={`report-option-card ${selectedReportCode === 'EMP_PAYSLIP' ? 'selected' : ''}`}
+            onClick={() => handleSelectReport('EMP_PAYSLIP')}
+          >
+            <div className="report-card-top">
+              <div className="report-badge-icon payslip-badge">
+                <FilePdfOutlined />
+              </div>
+              {selectedReportCode === 'EMP_PAYSLIP' && (
+                <Tag color="success" className="selected-tag"><CheckCircleOutlined /> Selected</Tag>
+              )}
+            </div>
+            <div className="report-card-title">Employee Monthly Payslip</div>
+            <div className="report-card-category">Payroll &amp; Compensation</div>
+            <Paragraph className="report-card-description">
+              Individual statutory payslip with dynamic earnings, allowances, statutory deductions (PF, Tax), and net salary snapshot.
+            </Paragraph>
+            <div className="report-card-params-pill">
+              Parameters: Company + Pay Period + Employee
+            </div>
+          </Card>
+
+          {/* Payroll Summary */}
+          <Card
+            hoverable
+            className={`report-option-card ${selectedReportCode === 'PAYROLL_SUMMARY' ? 'selected' : ''}`}
+            onClick={() => handleSelectReport('PAYROLL_SUMMARY')}
+          >
+            <div className="report-card-top">
+              <div className="report-badge-icon summary-badge">
+                <BarChartOutlined />
+              </div>
+              {selectedReportCode === 'PAYROLL_SUMMARY' && (
+                <Tag color="success" className="selected-tag"><CheckCircleOutlined /> Selected</Tag>
+              )}
+            </div>
+            <div className="report-card-title">Payroll Master Register</div>
+            <div className="report-card-category">Audit &amp; Financials</div>
+            <Paragraph className="report-card-description">
+              Complete company-wide payroll register detailing all employee disbursements, bank accounts, PAN/tax IDs, gross earnings, and batch totals.
+            </Paragraph>
+            <div className="report-card-params-pill">
+              Parameters: Company + Pay Period
+            </div>
+          </Card>
+
+          {/* Headcount Cost */}
+          <Card
+            hoverable
+            className={`report-option-card ${selectedReportCode === 'HEADCOUNT_COST' ? 'selected' : ''}`}
+            onClick={() => handleSelectReport('HEADCOUNT_COST')}
+          >
+            <div className="report-card-top">
+              <div className="report-badge-icon cost-badge">
+                <TeamOutlined />
+              </div>
+              {selectedReportCode === 'HEADCOUNT_COST' && (
+                <Tag color="success" className="selected-tag"><CheckCircleOutlined /> Selected</Tag>
+              )}
+            </div>
+            <div className="report-card-title">Department Cost &amp; Headcount</div>
+            <div className="report-card-category">Executive Analytics</div>
+            <Paragraph className="report-card-description">
+              Departmental breakdown of active personnel, total base salary payroll expenditure, and average salary benchmarks.
+            </Paragraph>
+            <div className="report-card-params-pill">
+              Parameters: Company
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* ── STEP 2: Dynamic Parameters Panel ─────────────────── */}
+      <div className="reports-section-card">
+        <div className="reports-section-header">
+          <div className="step-indicator">Step 2</div>
+          <div>
+            <Title level={4} className="section-title">Configure Parameters</Title>
+            <Text className="section-subtitle">
+              Configuring filters for: <strong>{activeReport?.title || selectedReportCode}</strong>
+            </Text>
           </div>
-          <div className="filter-group">
-            <label className="filter-label">
-              <UserOutlined /> &nbsp;Employee
-            </label>
-            <Select
-              value={selectedEmployee ?? undefined}
-              onChange={(v: number) => { setSelectedEmployee(v); setRecord(null); setError(null); }}
-              placeholder="Select employee..."
-              className="filter-select"
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              loading={loading && employees.length === 0}
-              options={employees.map((e) => ({
-                value: e.id,
-                label: `${e.employee_code}  —  ${e.first_name} ${e.last_name}`,
-              }))}
-            />
+        </div>
+
+        <div className="parameter-form-row">
+          {/* Payroll Batch Selector (needed for EMP_PAYSLIP and PAYROLL_SUMMARY) */}
+          {(selectedReportCode === 'EMP_PAYSLIP' || selectedReportCode === 'PAYROLL_SUMMARY') && (
+            <div className="parameter-item">
+              <label className="parameter-label">
+                <CalendarOutlined /> Payroll Period (Completed Batches)
+              </label>
+              <Select
+                value={selectedBatchId ?? undefined}
+                onChange={(val) => {
+                  setSelectedBatchId(val);
+                  setPreviewBlobUrl(null);
+                  setCurrentJob(null);
+                }}
+                placeholder="Choose completed payroll batch..."
+                className="parameter-select"
+                loading={loadingData}
+                options={batches.map((b) => ({
+                  value: b.batch_id,
+                  label: `${MONTH_NAMES[b.month]} ${b.year}  —  Batch #${b.batch_id} (${formatINR(b.total_net_pay)})`,
+                }))}
+              />
+            </div>
+          )}
+
+          {/* Employee Selector (needed for EMP_PAYSLIP) */}
+          {selectedReportCode === 'EMP_PAYSLIP' && (
+            <div className="parameter-item">
+              <label className="parameter-label">
+                <UserOutlined /> Target Employee
+              </label>
+              <Select
+                value={selectedEmployeeId ?? undefined}
+                onChange={(val) => {
+                  setSelectedEmployeeId(val);
+                  setPreviewBlobUrl(null);
+                  setCurrentJob(null);
+                }}
+                placeholder="Search and choose employee..."
+                showSearch
+                optionFilterProp="label"
+                className="parameter-select"
+                loading={loadingData}
+                options={employees.map((e) => ({
+                  value: e.id,
+                  label: `${e.employee_code}  •  ${e.first_name} ${e.last_name} (${e.department_name || 'General'})`,
+                }))}
+              />
+            </div>
+          )}
+
+          {/* Action Button: Run / Generate Report */}
+          <div className="parameter-action-group">
+            <Button
+              type="primary"
+              size="large"
+              icon={<PlayCircleOutlined />}
+              onClick={handleExecuteReport}
+              loading={executing}
+              className="run-report-btn"
+            >
+              {executing ? 'Executing Staging & Jasper...' : 'Generate Report'}
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* ── Loading ──────────────────────────────────────── */}
-      {loading && (
-        <div className="reports-loading"><Spin size="large" /></div>
-      )}
-
-      {/* ── No record message ─────────────────────────── */}
-      {!loading && selectedBatch && selectedEmployee && !record && !error && (
-        <Empty description="No payslip found for this selection." className="reports-empty" />
-      )}
-
-      {/* ═══════════════════════════════════════════════ */}
-      {/* PAYSLIP PREVIEW                                */}
-      {/* ═══════════════════════════════════════════════ */}
-      {!loading && record && emp && batch && (
-        <div className="payslip-preview">
-
-          {/* Header */}
-          <div className="payslip-header">
-            <div className="payslip-company-block">
-              <div className="payslip-company-logo">💼</div>
-              <div>
-                <div className="payslip-company-name">
-                  {emp.email.split('@')[1]?.split('.')[0]?.toUpperCase() ?? 'COMPANY'}
-                </div>
-                <div className="payslip-company-sub">
-                  Payslip for the month of {MONTH_NAMES[batch.month]} {batch.year}
-                </div>
+      {/* ── STEP 3: Report Preview & Export ──────────────────── */}
+      {previewBlobUrl && currentJob && (
+        <div className="reports-section-card preview-section-card">
+          <div className="preview-action-bar">
+            <div className="preview-meta-group">
+              <div className="preview-badge-status">
+                <Tag color="success" className="job-status-pill">
+                  <CheckCircleOutlined /> GENERATED
+                </Tag>
+                <Text strong className="preview-job-title">
+                  {activeReport?.title}
+                </Text>
               </div>
+              <Text className="preview-job-id">
+                Job ID: <code>{currentJob.jobId}</code>
+              </Text>
             </div>
-            <div className="payslip-actions">
+
+            {/* ONLY Export PDF is provided; Print button has been permanently removed */}
+            <div className="preview-buttons">
               <Button
                 type="primary"
-                icon={<FilePdfOutlined />}
-                className="payslip-pdf-btn"
-                loading={pdfLoading}
-                onClick={handleDownloadPdf}
+                size="large"
+                icon={<DownloadOutlined />}
+                onClick={handleExportPdf}
+                loading={downloading}
+                className="export-pdf-primary-btn"
               >
                 Export PDF
               </Button>
               <Button
-                icon={<PrinterOutlined />}
-                className="payslip-print-btn"
-                onClick={() => window.print()}
+                icon={<ReloadOutlined />}
+                size="large"
+                onClick={handleExecuteReport}
+                loading={executing}
+                className="regenerate-btn"
               >
-                Print
+                Regenerate
               </Button>
             </div>
           </div>
 
-          {/* Employee Info Grid */}
-          <div className="payslip-emp-grid">
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Employee Name</div>
-              <div className="payslip-info-value">{emp.first_name} {emp.last_name}</div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Employee Code</div>
-              <div className="payslip-info-value mono">{emp.employee_code}</div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Department</div>
-              <div className="payslip-info-value">{emp.department_name}</div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Email</div>
-              <div className="payslip-info-value">{emp.email}</div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Employment Status</div>
-              <div className="payslip-info-value">
-                <Tag color={emp.employment_status === 'ACTIVE' ? 'green' : 'orange'}>
-                  {emp.employment_status}
-                </Tag>
-              </div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Pay Period</div>
-              <div className="payslip-info-value">{MONTH_NAMES[batch.month]} {batch.year}</div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Hire Date</div>
-              <div className="payslip-info-value">{emp.hire_date}</div>
-            </div>
-            <div className="payslip-info-block">
-              <div className="payslip-info-label">Base Salary</div>
-              <div className="payslip-info-value mono">{formatINR(emp.base_salary)}</div>
-            </div>
-          </div>
-
-          <Divider className="payslip-divider" />
-
-          {/* Earnings & Deductions */}
-          <div className="payslip-breakdown-grid">
-            {/* Earnings */}
-            <div className="payslip-section">
-              <div className="payslip-section-title earnings-title">💰 Earnings</div>
-              <table className="payslip-table">
-                <thead>
-                  <tr>
-                    <th>Component</th>
-                    <th className="text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {earnings.length > 0 ? earnings.map((d) => (
-                    <tr key={d.componentCode}>
-                      <td>
-                        {d.componentName}
-                        {d.isStatutory && (
-                          <Tag color="blue" style={{ marginLeft: 6, fontSize: 10 }}>Statutory</Tag>
-                        )}
-                      </td>
-                      <td className="text-right amount-earning">{formatINR(d.amount)}</td>
-                    </tr>
-                  )) : (
-                    <tr><td colSpan={2} style={{ color: '#94a3b8', textAlign: 'center', padding: '16px 0' }}>No earnings data</td></tr>
-                  )}
-                </tbody>
-                <tfoot>
-                  <tr className="payslip-subtotal">
-                    <td><strong>Gross Earnings</strong></td>
-                    <td className="text-right amount-earning">
-                      <strong>{formatINR(record.gross_earnings)}</strong>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-
-            {/* Deductions */}
-            <div className="payslip-section">
-              <div className="payslip-section-title deductions-title">📉 Deductions</div>
-              <table className="payslip-table">
-                <thead>
-                  <tr>
-                    <th>Component</th>
-                    <th className="text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deductions.length > 0 ? deductions.map((d) => (
-                    <tr key={d.componentCode}>
-                      <td>
-                        {d.componentName}
-                        {d.isStatutory && (
-                          <Tag color="orange" style={{ marginLeft: 6, fontSize: 10 }}>Statutory</Tag>
-                        )}
-                      </td>
-                      <td className="text-right amount-deduction">{formatINR(d.amount)}</td>
-                    </tr>
-                  )) : (
-                    <tr><td colSpan={2} style={{ color: '#94a3b8', textAlign: 'center', padding: '16px 0' }}>No deductions data</td></tr>
-                  )}
-                </tbody>
-                <tfoot>
-                  <tr className="payslip-subtotal">
-                    <td><strong>Total Deductions</strong></td>
-                    <td className="text-right amount-deduction">
-                      <strong>{formatINR(record.total_deductions)}</strong>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-
-          {/* Net Pay Banner */}
-          <div className="payslip-net-pay">
-            <div className="net-pay-label">Net Pay (Take Home)</div>
-            <div className="net-pay-value">{formatINR(record.net_salary)}</div>
-            <div className="net-pay-sub">
-              Computer-generated payslip — {MONTH_NAMES[batch.month]} {batch.year}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="payslip-footer">
-            <Tag color="green">COMPLETED</Tag>
-            <span className="payslip-footer-note">
-              This is a computer-generated payslip. No signature required.
-            </span>
+          {/* In-Browser PDF Viewer */}
+          <div className="pdf-iframe-container">
+            <iframe
+              src={previewBlobUrl}
+              title="JasperReports Document Preview"
+              className="pdf-preview-iframe"
+            />
           </div>
         </div>
       )}
 
-      {/* ── Report Catalogue (shown when no payslip loaded) ─── */}
-      {!record && !loading && (
-        <div className="report-catalogue">
-          <div className="catalogue-title">Available Reports</div>
-          <div className="catalogue-grid">
-            <div className="report-card">
-              <div className="report-card-icon pdf-icon"><FilePdfOutlined /></div>
-              <div className="report-card-title">Employee Payslip (PDF)</div>
-              <div className="report-card-desc">
-                Individual payslip for an employee for a specific payroll month. Includes earnings breakdown, deductions, and net pay via JasperReports.
+      {/* Placeholder when report hasn't been generated yet */}
+      {!previewBlobUrl && !executing && (
+        <div className="report-standby-banner">
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <div>
+                <Text strong style={{ fontSize: '15px', color: '#334155' }}>
+                  No Active Report Preview
+                </Text>
+                <div style={{ color: '#64748b', marginTop: 4 }}>
+                  Select a template and parameters above, then click <strong>Generate Report</strong> to snapshot data into the staging table and compile your Jasper PDF.
+                </div>
               </div>
-              <div className="report-card-how">
-                Select a batch + employee above, then click <strong>Export PDF</strong>.
-              </div>
-            </div>
+            }
+          />
+        </div>
+      )}
 
-            <div className="report-card">
-              <div className="report-card-icon excel-icon"><FileExcelOutlined /></div>
-              <div className="report-card-title">Payroll Summary (Excel)</div>
-              <div className="report-card-desc">
-                Full payroll summary for all employees in a batch — gross, deductions, net pay per employee. Suitable for accounts and finance teams.
-              </div>
-              <div className="report-card-how">
-                Select a completed batch above, then click <strong>Download Payroll Excel</strong>.
-              </div>
-            </div>
-
-            <div className="report-card">
-              <div className="report-card-icon print-icon"><DownloadOutlined /></div>
-              <div className="report-card-title">Department Headcount (PDF)</div>
-              <div className="report-card-desc">
-                Summary of active employees by department — headcount, salary ranges, and status breakdown. Useful for HR reporting and compliance.
-              </div>
-              <div className="report-card-how">
-                <BankOutlined /> Coming soon — generates department-level HR summary.
-              </div>
-            </div>
+      {executing && (
+        <div className="report-generating-overlay">
+          <Spin size="large" />
+          <div className="generating-text-title">Generating Enterprise Report</div>
+          <div className="generating-text-sub">
+            Invoking PostgreSQL staging procedure &rarr; compiling JasperReports layout &rarr; saving artifact to MinIO storage...
           </div>
         </div>
       )}
