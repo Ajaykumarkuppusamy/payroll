@@ -86,16 +86,16 @@ flowchart TD
 
 ### 1. Secure Formula-Driven Calculations (Spring SpEL Sandbox)
 - Salary components (Basic Pay, HRA, Provident Fund) are stored with configurable formula expressions (e.g. `#BASE_SALARY * 0.40`).
-- **Security**: Formulas are evaluated via [`SpelFormulaEvaluatorService.java`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/engine/SpelFormulaEvaluatorService.java) using Spring's `SimpleEvaluationContext.forReadOnlyDataBinding()`.
+- **Security**: Formulas are evaluated via [`SpelFormulaEvaluatorService.java`](enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/engine/SpelFormulaEvaluatorService.java) using Spring's `SimpleEvaluationContext.forReadOnlyDataBinding()`.
   > **Note**: Unlike `StandardEvaluationContext`, `SimpleEvaluationContext` restricts evaluation strictly to read-only variable data binding. Java reflection, class loader invocation (`T(...)`), and arbitrary method execution are completely blocked.
 
 ### 2. Batch Payroll Processing & Concurrency Control
-- Monthly runs are initiated per company through [`PayrollExecutionService.java`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/service/PayrollExecutionService.java).
+- Monthly runs are initiated per company through [`PayrollExecutionService.java`](enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/service/PayrollExecutionService.java).
 - **Pessimistic Locking**: Concurrent runs for the same period are prevented via JPA database-level locks (`@Lock(LockModeType.PESSIMISTIC_WRITE)`).
 - **Asynchronous Offloading**: Once calculations are committed to PostgreSQL, the service publishes lightweight `PayslipGenerationEvent` messages to the Kafka topic `payroll.payslip.generation`.
 
 ### 3. Asynchronous Payslip Generation via Apache Kafka
-- [`PayslipGenerationConsumer.java`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/event/PayslipGenerationConsumer.java) listens on the Kafka topic, loads line items, compiles Jasper PDFs, and uploads the files to MinIO.
+- [`PayslipGenerationConsumer.java`](enterprise-payroll-api/src/main/java/com/payroll/aj/payroll/event/PayslipGenerationConsumer.java) listens on the Kafka topic, loads line items, compiles Jasper PDFs, and uploads the files to MinIO.
 - **Deterministic Storage Keys**: Payslips are stored under deterministic paths:
   `tenants/{tenantId}/companies/{companyId}/{year}/{month}/{employeeCode}_payslip.pdf`
   This guarantees that event retries overwrite the exact object key rather than creating duplicate files.
@@ -104,7 +104,7 @@ flowchart TD
 For on-demand management reports (Payslips, Payroll Register, Headcount & Cost):
 1. **Dynamic Parameter Selection**: User chooses report code and filters (company, completed batch, employee).
 2. **PL/pgSQL Staging**: The backend invokes a stored procedure (`sp_populate_payslip_staging`, `sp_populate_payroll_summary_staging`, or `sp_populate_headcount_cost_staging`).
-3. **Partition Isolation**: Staged data rows are tagged with a unique `job_id` UUID in [`report_staging_data`](file:///c:/Users/91877/OneDrive/Desktop/Java%20Studies/enterprise-payroll-platform/enterprise-payroll-api/src/main/resources/db/migration/V7__reporting_tables.sql).
+3. **Partition Isolation**: Staged data rows are tagged with a unique `job_id` UUID in [`report_staging_data`](enterprise-payroll-api/src/main/resources/db/migration/V7__reporting_tables.sql).
 4. **Jasper Compilation**: Pre-compiled JRXML templates format the staged bean data into high-resolution PDFs.
 5. **Streaming Preview & Download**: The PDF is uploaded to MinIO and streamed directly to the frontend `<iframe />` with an instant **Export PDF** button.
 
